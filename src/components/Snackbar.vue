@@ -13,7 +13,7 @@
         v-bind="attrs"
         @click="show = false"
       >
-        <v-icon>mdi-close</v-icon>
+        <v-icon small>mdi-close</v-icon>
       </v-btn>
     </template>
   </v-snackbar>
@@ -26,7 +26,7 @@ export default {
   created() {
     this.$store.subscribe((mutation, state) => {
       if(mutation.type == 'setSnackbar') {
-        this.show = !this.show
+        this.show = true
         this.text = state.snackbar.text
         this.color = state.snackbar.color
       }

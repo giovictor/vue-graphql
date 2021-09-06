@@ -1,25 +1,18 @@
 <template>
-  <v-dialog v-model="show" :width="600">
+  <v-dialog v-model="show" :width="600" @click:outside="$emit('cancel')">
     <v-card>
       <v-toolbar dense dark color="primary">
-          <v-toolbar-title class="text-uppercase subtitle-1">{{title}}</v-toolbar-title>
+          <v-toolbar-title class="text-uppercase text-body-2">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn
             icon
             dark
-            @click="showModal(false)"
+            @click="$emit('cancel')"
           >
-            <v-icon>mdi-close</v-icon>
+            <v-icon small>mdi-close</v-icon>
           </v-btn>
       </v-toolbar>
-      <v-form @submit.prevent="$emit('submit')">
-        <slot v-if="show"></slot>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn dark class="red darken-2" @click="showModal(false)">Cancel</v-btn>
-          <v-btn type="submit" dark class="success">Confirm</v-btn>
-        </v-card-actions>
-      </v-form>
+      <slot v-if="show"></slot>
     </v-card>
   </v-dialog>
 </template>
@@ -28,7 +21,10 @@
 import { mapState, mapMutations } from 'vuex'
 
 export default {
+  name: 'Modal',
+
   props: ['title'],
+
   computed: {
     ...mapState(['modal']),
     show: {
@@ -40,6 +36,7 @@ export default {
       }
     }
   },
+
   methods: {
     ...mapMutations(['showModal'])
   }
