@@ -6,7 +6,7 @@ Vue.use(Vuetify);
 const theme = {
   primary: '#374C61',
   success: '#3FB984',
-  error: '#D32F2F'
+  error: '#EF5350'
 }
 
 export default new Vuetify({

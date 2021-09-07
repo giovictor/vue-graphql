@@ -10,7 +10,10 @@
               type="text"
               outlined
               dense
-              v-model="postForm.title"
+              v-model="$v.title.$model"
+              @input="$v.title.$touch()"
+              @blur="$v.title.$touch()"
+              :error-messages="titleErrors"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -20,7 +23,10 @@
               label="Body"
               outlined
               height="180"
-              v-model="postForm.body"
+              v-model="$v.body.$model"
+              @input="$v.body.$touch()"
+              @blur="$v.body.$touch()"
+              :error-messages="bodyErrors"
             ></v-textarea>
           </v-col>
         </v-row>
@@ -36,6 +42,7 @@
 
 <script>
 import { mapMutations, mapActions } from 'vuex'
+import { required, maxLength } from 'vuelidate/lib/validators'
 
 export default {
   name: 'PostForm',
@@ -47,45 +54,78 @@ export default {
   },
 
   data: () => ({
-    postForm: {
-      title: '',
-      body: ''
-    }
+    title: '',
+    body: ''
   }),
+
+  validations: {
+    title: {
+      required, 
+      maxLength: maxLength(100),
+    },
+    body: {
+      required
+    }
+  },
+
+  computed: {
+    postForm() {
+      let { title, body } = this
+      return { title, body }
+    },
+
+    titleErrors() {
+      const errors = []
+      if (!this.$v.title.$dirty) return errors
+      !this.$v.title.required && errors.push('Title is required.')
+      !this.$v.title.maxLength && errors.push('Title should only have to a 100 characters.')
+      return errors
+    },
+    bodyErrors() {
+      const errors = []
+      if (!this.$v.body.$dirty) return errors
+      !this.$v.body.required && errors.push('Body is required.')
+      return errors
+    }
+  },
 
   methods: {
     ...mapMutations(['setSnackbar']),
     ...mapActions('posts', ['createPost', 'updatePost', 'deletePost']),
     initializePost() {
       if(this.post) {
-        Object.keys(this.postForm).map(key => {
-          this.postForm[key] = this.post[key]
+        Object.keys(this.post).map(key => {
+          this[key] = this.post[key]
         })
       }
     },
 
     async submit() {
-      try {
-        if(this.action == 'create') {
-          this.setSnackbar({ color: 'primary', text: 'Creating post...'})
-          await this.createPost(this.postForm)
-          this.setSnackbar({ color: 'success', text: 'Created post!'})
-        }
+      if(!this.$v.$invalid) {
+        try {
+          if(this.action == 'create') {
+            this.setSnackbar({ color: 'primary', text: 'Creating post...'})
+            await this.createPost(this.postForm)
+            this.setSnackbar({ color: 'success', text: 'Created post!'})
+          }
 
-        if(this.action == 'update') {
-          this.setSnackbar({ color: 'primary', text: 'Updating post...'})
-          await this.updatePost({ id: this.post.id, post: this.postForm })
-          this.setSnackbar({ color: 'success', text: 'Updated post!'})
-        }
+          if(this.action == 'update') {
+            this.setSnackbar({ color: 'primary', text: 'Updating post...'})
+            await this.updatePost({ id: this.post.id, post: this.postForm })
+            this.setSnackbar({ color: 'success', text: 'Updated post!'})
+          }
 
-        if(this.action == 'delete') {
-          this.setSnackbar({ color: 'primary', text: 'Deleting post...'})
-          await this.deletePost(this.post.id)
-          this.setSnackbar({ color: 'success', text: 'Deleted post!'})
+          if(this.action == 'delete') {
+            this.setSnackbar({ color: 'primary', text: 'Deleting post...'})
+            await this.deletePost(this.post.id)
+            this.setSnackbar({ color: 'success', text: 'Deleted post!'})
+          }
+          this.$emit('submit')
+        } catch(err) {
+          this.setSnackbar({ color: 'error', text: 'An error has occured. Please try again.' })
         }
-        this.$emit('submit')
-      } catch(err) {
-        this.setSnackbar({ color: 'error', text: 'An error has occured. Please try again.' })
+      } else {
+        this.$v.$touch()
       }
     }
   }
