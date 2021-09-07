@@ -101,7 +101,7 @@ export default {
     },
 
     async submit() {
-      if(!this.$v.$invalid) {
+      if(!this.$v.$invalid || this.action == 'delete') {
         try {
           if(this.action == 'create') {
             this.setSnackbar({ color: 'primary', text: 'Creating post...'})
