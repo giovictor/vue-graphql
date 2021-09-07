@@ -15,7 +15,7 @@
       :headers="headers"
       :items="users"
       :loading="isLoading"
-      :loading-text="loadingText"
+      loading-text="Loading Users"
       item-key="username"
     >
       <template v-slot:[`item.actions`]="{ item }">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations, mapActions } from 'vuex'
+import { mapState, mapGetters, mapMutations, mapActions } from 'vuex'
 
 export default {
   name: 'Users',
@@ -53,8 +53,6 @@ export default {
       { text: 'Name', value: 'name' },
       { text: 'Username', value: 'username' },
       { text: 'Email', value: 'email' },
-      { text: 'Phone', value: 'phone' },
-      { text: 'Website', value: 'website' },
       { text: '', value: 'actions' },
     ],
     action: null,
@@ -62,11 +60,13 @@ export default {
   }),
 
   computed: {
-    ...mapState('users', ['users', 'isLoading', 'loadingText'])  
+    ...mapState('users', ['isLoading']), 
+    ...mapGetters('users', ['users']), 
   },
 
   methods: {
     ...mapMutations(['showModal']),
+    ...mapMutations('users', ['setUsers']),
     ...mapActions('users', ['getUsers']),
     setAction(action, user) {
       this.action = action
@@ -81,6 +81,11 @@ export default {
       this.action = null
       this.user = null
     }
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.setUsers([])
+    next()
   }
 }
 </script>

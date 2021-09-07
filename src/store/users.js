@@ -3,17 +3,20 @@ import { apollo, gql } from '../apollo'
 const state = {
   users: [],
   isLoading: false,
-  loadingText: 'Loading Users',
   fragment: gql`
     fragment user on User {
       id 
       name
       username
       email
-      phone
-      website
     }
   `
+}
+
+const getters = {
+  users: (state) => {
+    return [...state.users].reverse()
+  }
 }
 
 const mutations = {
@@ -24,14 +27,14 @@ const mutations = {
     state.isLoading = isLoading
   },
   createUser: (state, newUser) => {
-    state.users.unshift(newUser)
+    state.users.push(newUser)
   },
-  updateUser: (state, updatedUser) => {
+  updateUser: (state, { id, updatedUser }) => {
     state.users.map(user => {
-      if(user.id === updatedUser.id) {
-        Object.keys(updatedUser).map(key => {
-          user[key] = updatedUser[key]
-        })
+      if(user.id === id) {
+        user.name = updatedUser.name
+        user.username = updatedUser.username
+        user.email = updatedUser.email
       }
     })
   },
@@ -105,7 +108,7 @@ const actions = {
       })
       .then(response => {
         resolve()
-        commit('updateUser', response.data.updateUser)
+        commit('updateUser', { id: id, updatedUser: response.data.updateUser })
       })
       .catch(err => {
         reject(err)
@@ -139,6 +142,7 @@ const actions = {
 
 export default {
   state,
+  getters,
   mutations,
   actions,
   namespaced: true

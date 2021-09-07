@@ -34,26 +34,6 @@
             ></v-text-field>
           </v-col>
         </v-row>
-        <v-row>
-          <v-col cols="12" md="6" class="formColumn">
-            <v-text-field
-              label="Phone"
-              type="text"
-              outlined
-              dense
-              v-model="userForm.phone"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" md="6" class="formColumn">
-            <v-text-field
-              label="Website"
-              type="text"
-              outlined
-              dense
-              v-model="userForm.website"
-            ></v-text-field>
-          </v-col>
-        </v-row>
       </v-container>
     </v-card-text>
     <v-card-actions>
@@ -80,9 +60,7 @@ export default {
     userForm: {
       name: '',
       email: '',
-      username: '',
-      phone: null,
-      website: null
+      username: ''
     }
   }),
 
@@ -92,7 +70,7 @@ export default {
     initializeUser() {
       if(this.user) {
         Object.keys(this.userForm).map(key => {
-          this.$set(this.userForm, key, this.user[key])
+          this.userForm[key] = this.user[key]
         })
       }
     },
