@@ -28,7 +28,7 @@ export default {
       if(mutation.type == 'setSnackbar') {
         this.show = true
         this.text = state.snackbar.text
-        this.color = state.snackbar.color
+        this.color = state.snackbar.color || ""
       }
     })
   },

@@ -116,7 +116,7 @@ const actions = {
     return new Promise((resolve, reject) => {
       apollo.mutate({
         mutation: gql`
-          mutation DeleteUser($id:ID!) {
+          mutation DeleteUser($id: ID!) {
             deleteUser(id: $id)
           }
         `,

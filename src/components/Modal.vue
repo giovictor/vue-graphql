@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="show" :width="600" @click:outside="$emit('cancel')">
-    <v-card>
-      <v-toolbar dense dark color="primary">
+    <v-card dark color="#3A3A3A">
+      <v-toolbar dense dark>
           <v-toolbar-title class="text-uppercase text-body-2">{{title}}</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-btn

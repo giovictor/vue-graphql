@@ -2,19 +2,32 @@
   <v-app>
     <v-app-bar
       app
-      color="primary"
+      color="#1B1B1B"
       dark
-      clipped-left
     >
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title>{{$route.name}}</v-toolbar-title>
     </v-app-bar>
     <v-navigation-drawer
       app
       dark
-      clipped
+      color="#1B1B1B"
       v-model="drawer"
     >
-      <v-list>
+      <v-list-item>
+        <v-list-item-content>
+          <v-list-item-title class="text-h6">
+            VueGraphQL
+          </v-list-item-title>
+          <v-list-item-subtitle>
+            <v-icon>mdi-vuejs</v-icon> + <v-icon>mdi-graphql</v-icon>
+          </v-list-item-subtitle>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider class="mb-2" />
+
+      <v-list nav>
         <v-list-item v-for="page in pages" :key="page.title" link :to="page.to">
           <v-list-item-icon>
             <v-icon>{{page.icon}}</v-icon>
@@ -58,3 +71,9 @@ export default {
   })
 };
 </script>
+
+<style>
+  body, main {
+    background-color: #111111;
+  }
+</style>

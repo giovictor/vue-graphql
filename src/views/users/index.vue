@@ -1,14 +1,17 @@
 <template>
   <v-container>
-    <v-toolbar flat>
-      <v-toolbar-title>Users</v-toolbar-title>
+    <v-toolbar dark flat>
       <v-spacer></v-spacer>
       <v-btn dark small class="ml-3 mt-2" depressed elevation="2" color="primary" @click="setAction('create')">
         <v-icon left>mdi-plus</v-icon>
         <span class="caption">Create User</span>
       </v-btn>
     </v-toolbar>
+
+    <v-divider dark></v-divider>
+
     <v-data-table
+      dark
       :headers="headers"
       :items="users"
       :loading="isLoading"
@@ -24,8 +27,8 @@
         </v-btn>
       </template>
     </v-data-table>
-    <modal :title="`${action} user`" @cancel="cancel">
-      <user-form :action="action" :user="user" @cancel="cancel"></user-form>
+    <modal :title="`${action} user`" @cancel="clearFields">
+      <user-form :action="action" :user="user" @cancel="clearFields" @submit="clearFields"></user-form>
     </modal>
   </v-container>
 </template>
@@ -73,7 +76,7 @@ export default {
         this.user = user
       }
     },
-    cancel() {
+    clearFields() {
       this.showModal(false)
       this.action = null
       this.user = null

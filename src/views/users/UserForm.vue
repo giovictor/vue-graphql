@@ -58,8 +58,8 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn dark color="error" @click="$emit('cancel')">Cancel</v-btn>
-      <v-btn dark color="success" type="submit">Confirm</v-btn>
+      <v-btn dark outlined class="actionButton" @click="$emit('cancel')">Cancel</v-btn>
+      <v-btn dark color="primary" class="actionButton" type="submit">Confirm</v-btn>
     </v-card-actions>
   </v-form>
 </template>
@@ -87,7 +87,7 @@ export default {
   }),
 
   methods: {
-    ...mapMutations(['showModal', 'setSnackbar']),
+    ...mapMutations(['setSnackbar']),
     ...mapActions('users', ['createUser', 'updateUser', 'deleteUser']),
     initializeUser() {
       if(this.user) {
@@ -116,7 +116,7 @@ export default {
           await this.deleteUser(this.user.id)
           this.setSnackbar({ color: 'success', text: 'Deleted user!'})
         }
-        this.showModal(false)
+        this.$emit('submit')
       } catch(err) {
         this.setSnackbar({ color: 'error', text: 'An error has occured. Please try again.' })
       }
@@ -124,9 +124,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.formColumn {
-  height: 65px;
-}
-</style>
